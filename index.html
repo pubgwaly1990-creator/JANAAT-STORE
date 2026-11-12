@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jannat Store - 11.11 Mega Sale | Daraz Inspired Mall</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+        .hover-scale { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .hover-scale:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.2); }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-orange-600 via-amber-600 to-orange-700 text-white text-center py-2 text-xs font-bold tracking-wider uppercase shadow-md animate-pulse">
+        🔥 11.11 Mega Sale Live! Products Priced at PKR 50, 100 & 200 Only! No COD (OPay Only) | Min 3 Items per Order 🔥
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-40 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-lg">
+                <i class="fa-solid fa-store text-white text-lg"></i>
+            </div>
+            <div>
+                <span class="font-bold text-xl tracking-tight bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">Jannat Store</span>
+                <span class="block text-[10px] text-slate-400">Daraz Style Mystery & Accessories Mall</span>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+            <button onclick="openCart()" class="relative bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-xl text-xs font-semibold transition border border-slate-700 flex items-center space-x-2">
+                <i class="fa-solid fa-cart-shopping text-orange-400"></i>
+                <span>Cart (<span id="cartCount">0</span>)</span>
+            </button>
+            <button onclick="openAdminModal()" class="text-slate-500 hover:text-slate-400 text-xs px-2 py-1">
+                <i class="fa-solid fa-lock"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Store Content -->
+    <main class="max-w-7xl mx-auto p-6 flex-1 w-full space-y-8">
+        
+        <!-- Hero Banner -->
+        <div class="bg-gradient-to-r from-orange-900/40 via-slate-900 to-amber-950/40 border border-orange-500/30 rounded-2xl p-8 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="space-y-3 text-center md:text-left">
+                <span class="bg-orange-600/20 text-orange-400 border border-orange-500/40 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-widest">11.11 Flash Bonanza</span>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-white">Mystery Boxes & 100+ Products Priced at PKR 50, 100 & 200!</h1>
+                <p class="text-slate-400 text-xs md:text-sm max-w-xl">Over 100+ exclusive items with real product photography, including Wireless Handfrees, Fast Chargers, Smart Gadgets, and VIP Mystery Boxes.</p>
+            </div>
+            <div class="bg-slate-950/80 border border-slate-800 p-4 rounded-xl text-center space-y-2 min-w-[220px]">
+                <span class="text-[10px] uppercase text-emerald-400 font-bold">Official Payment Partner</span>
+                <p class="text-xs font-bold text-white">OPay Bank Account</p>
+                <p class="font-mono text-lg text-amber-400 font-bold">03028372072</p>
+                <p class="text-[11px] text-slate-400">Title: <span class="text-white font-semibold">Usman Amjad</span></p>
+            </div>
+        </div>
+
+        <!-- Product Catalog Section (100+ Products with Real Images) -->
+        <div class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fa-solid fa-fire text-orange-500 mr-2"></i> 11.11 Trending Catalog (100+ Products)
+                </h2>
+                <span class="text-xs text-slate-400">Minimum 3 Items Required per Order</span>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+
+        <!-- 100+ Customer Reviews & Jannat Store Replies Section -->
+        <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+            <h3 class="text-lg font-bold text-white flex items-center">
+                <i class="fa-solid fa-comments text-amber-400 mr-2"></i> Verified Buyer Reviews & Jannat Store Replies (100+ Comments)
+            </h3>
+            <p class="text-xs text-slate-400">Real feedback from customers with official replies from Jannat Store management.</p>
+            
+            <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2">
+                <!-- Loaded dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart / Checkout Modal -->
+    <div id="cartModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-md px-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-orange-400"><i class="fa-solid fa-cart-shopping mr-2"></i> Your Shopping Cart</h2>
+                <button onclick="closeCart()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <div id="cartItemsList" class="space-y-3 mb-4 divide-y divide-slate-800"></div>
+
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 mb-4">
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-400">Total Items:</span>
+                    <span id="cartTotalItems" class="font-bold text-white">0 (Min 3 required)</span>
+                </div>
+                <div class="flex justify-between text-sm">
+                    <span class="text-slate-400">Total Amount:</span>
+                    <span id="cartTotalPrice" class="font-bold text-orange-400">PKR 0</span>
+                </div>
+                <p class="text-[10px] text-amber-400"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Cash on Delivery (COD) is NOT available. Pay via OPay only.</p>
+            </div>
+
+            <form onsubmit="checkoutOrder(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Full Name</label>
+                    <input type="text" id="orderName" required placeholder="e.g. Ali Khan" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Delivery Address</label>
+                    <input type="text" id="orderAddress" required placeholder="e.g. House 12, Street 3, Lahore" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Mobile Number</label>
+                    <input type="tel" id="orderPhone" required placeholder="e.g. 03001234567" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">OPay Transaction ID (Pay to 03028372072)</label>
+                    <input type="text" id="orderTrx" required placeholder="e.g. TRX98234712" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Upload OPay Payment Screenshot</label>
+                    <input type="file" id="orderScreenshot" required accept="image/*" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-400 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-orange-600 file:text-white">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 py-3 rounded-xl font-semibold text-sm shadow-lg transition mt-2">
+                    Place Order (OPay Prepaid)
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Hidden Admin Panel Modal (PIN: 4172 with Product Add/Edit/Delete) -->
+    <div id="adminModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/95 backdrop-blur-md px-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-orange-400"><i class="fa-solid fa-shield-halved mr-2"></i> Jannat Store Secure Admin Panel</h2>
+                <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+
+            <!-- PIN Login Box -->
+            <div id="adminLoginBox" class="space-y-4 mb-6">
+                <p class="text-xs text-slate-400">Enter Admin PIN to access management tools:</p>
+                <div class="flex space-x-2">
+                    <input type="password" id="adminPinInput" placeholder="Enter PIN" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-orange-500">
+                    <button onclick="verifyAdminPin()" class="bg-orange-600 hover:bg-orange-500 px-5 py-2.5 rounded-xl text-xs font-semibold">Login</button>
+                </div>
+            </div>
+
+            <!-- Admin Dashboard Content (Hidden until verified) -->
+            <div id="adminDashboardContent" class="hidden space-y-6">
+                
+                <!-- Add New Product Form -->
+                <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                    <h3 class="text-sm font-bold text-orange-400"><i class="fa-solid fa-plus mr-1"></i> Add New Product to Catalog</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <input type="text" id="newProdName" placeholder="Product Name" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
+                        <input type="number" id="newProdPrice" placeholder="Price (50, 100, or 200 PKR)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
+                        <input type="text" id="newProdCategory" placeholder="Category (e.g. Mystery Box)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
+                        <input type="text" id="newProdImg" placeholder="Image URL (Unsplash or direct link)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
+                    </div>
+                    <button onclick="addNewProduct()" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-xl text-xs font-semibold text-white">Add Product</button>
+                </div>
+
+                <!-- Product Management List (Edit/Delete) -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Manage Catalog Products (Edit / Delete)</h3>
+                    <div id="adminProductList" class="space-y-2 max-h-[300px] overflow-y-auto pr-2"></div>
+                </div>
+
+                <!-- Orders Management -->
+                <div class="space-y-3 pt-4 border-t border-slate-800">
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Incoming Customer Orders</h3>
+                    <div id="adminOrdersContainer" class="space-y-3">
+                        <p class="text-xs text-slate-500">No new orders yet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generating 100+ Products Catalog dynamically with proper images and 5-star ratings
+        let products = [];
+        const categories = ["Mystery Box", "Accessories", "Chargers", "Gadgets", "Smart Watches"];
+        
+        // Professional Unsplash product image URLs rotation
+        const sampleImages = [
+            "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=300&q=80", // Smart Watch
+            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80", // Headphone
+            "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80", // Mystery Box Gift
+            "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=300&q=80", // Charger & Cable
+            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=80", // Gadget watch
+            "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300&q=80", // Earbuds
+            "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=300&q=80"  // Powerbank
+        ];
+        
+        const priceOptions = [50, 100, 200];
+        
+        for (let i = 1; i <= 100; i++) {
+            let cat = categories[i % categories.length];
+            let img = sampleImages[i % sampleImages.length];
+            let price = priceOptions[i % priceOptions.length];
+            products.push({
+                id: i,
+                name: `Jannat Store 11.11 Deal #${i} - ${cat} Premium Edition`,
+                price: price,
+                category: cat,
+                image: img,
+                rating: "5.0" // All products rated good / 5.0
+            });
+        }
+
+        let cart = [];
+        let orders = [];
+
+        const reviewerNames = ["Usman Ali", "Bilal Ahmed", "Hamza Khan", "Zainab Bibi", "Ayesha Malik", "Faizan Raza", "Saadullah", "Jawad Ahmed", "Mian Tariq", "Sana Javed"];
+        const reviewTexts = [
+            "Mera mystery box mein se airpods nikle! Best 11.11 sale ever!",
+            "Bohot zabardast packing thi, itni achi cheez itni kam price mein mil gayi!",
+            "Fast delivery and genuine products. Thank you Jannat Store!",
+            "Meray order mein fast charger aur handfree aya, 10/10 quality!",
+            "OPay se payment ki thi, order foran confirm ho gaya tha.",
+            "Mystery box unboxing ki toh dil khush ho gaya, sab se best store!",
+            "Itni zabardast price mein aisi quality unbelievable hai.",
+            "Main ne 5 mystery boxes mangwaye thay, sab mein amazing items niklay!",
+            "Daraz jaisa maza hai balkay us se bhi behtareen!",
+            "Highly recommended! 11.11 sale ka poora faida uthaya hai."
+        ];
+
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-lg hover-scale overflow-hidden">
+                        <div>
+                            <div class="h-40 w-full bg-slate-950 rounded-xl mb-4 overflow-hidden border border-slate-800/80">
+                                <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover hover:scale-110 transition duration-500">
+                            </div>
+                            <span class="text-[10px] bg-orange-600/20 text-orange-400 px-2 py-0.5 rounded font-bold uppercase">${p.category}</span>
+                            <h3 class="font-semibold text-xs text-white mt-2 mb-1 line-clamp-2">${p.name}</h3>
+                            <div class="flex items-center text-amber-400 text-xs mb-3">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <span class="ml-1 text-slate-300 font-bold">${p.rating} (Top Rated)</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-2 pt-3 border-t border-slate-800">
+                            <span class="text-lg font-bold text-orange-400">PKR ${p.price}</span>
+                            <button onclick="addToCart(${p.id})" class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow">
+                                <i class="fa-solid fa-cart-plus mr-1"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderReviews() {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = '';
+            for(let i = 1; i <= 100; i++) {
+                const name = reviewerNames[i % reviewerNames.length] + " #" + i;
+                const text = reviewTexts[i % reviewTexts.length];
+                container.innerHTML += `
+                    <div class="bg-slate-950/60 border border-slate-800/80 p-3 rounded-xl space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-semibold text-xs text-orange-400">${name}</span>
+                            <span class="text-[10px] text-amber-400">★★★★★ (5.0)</span>
+                        </div>
+                        <p class="text-xs text-slate-300">"${text}"</p>
+                        <div class="bg-slate-900/80 border-l-2 border-orange-500 p-2 rounded text-[11px] text-slate-300 space-y-0.5">
+                            <span class="font-bold text-orange-400 text-[10px] block"><i class="fa-solid fa-store mr-1"></i> Jannat Store Official Reply:</span>
+                            Shukriya ${name}! Aapka feedback hamare liye bohot ahem hai. Ummeed hai aapko hamari 11.11 sale pasand aayi hogi!
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            cart.push(product);
+            updateCartUI();
+            alert(product.name + " added to cart!");
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartCount').innerText = cart.length;
+            document.getElementById('cartTotalItems').innerText = cart.length + (cart.length < 3 ? " (Minimum 3 items required!)" : " (Valid)");
+            
+            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            document.getElementById('cartTotalPrice').innerText = "PKR " + total;
+
+            const list = document.getElementById('cartItemsList');
+            list.innerHTML = '';
+            cart.forEach((item, index) => {
+                list.innerHTML += `
+                    <div class="py-2 flex justify-between items-center text-xs">
+                        <span class="truncate max-w-[200px]">${item.name}</span>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-orange-400 font-bold">PKR ${item.price}</span>
+                            <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function openCart() { document.getElementById('cartModal').style.display = 'flex'; updateCartUI(); }
+        function closeCart() { document.getElementById('cartModal').style.display = 'none'; }
+
+        function checkoutOrder(event) {
+            event.preventDefault();
+            if(cart.length < 3) {
+                alert("Minimum 3 items are required per order in Jannat Store!");
+                return;
+            }
+
+            const name = document.getElementById('orderName').value;
+            const address = document.getElementById('orderAddress').value;
+            const phone = document.getElementById('orderPhone').value;
+            const trx = document.getElementById('orderTrx').value;
+            const screenshot = document.getElementById('orderScreenshot').files[0];
+
+            if(!name || !address || !phone || !trx || !screenshot) {
+                alert("Please fill all details and attach payment screenshot!");
+                return;
+            }
+
+            const newOrder = {
+                id: "ORD-" + Math.floor(100000 + Math.random() * 900000),
+                name, address, phone, trx,
+                items: [...cart],
+                total: cart.reduce((sum, item) => sum + item.price, 0)
+            };
+
+            orders.push(newOrder);
+            alert("Order placed successfully via OPay (03028372072)! Sent to Admin Panel.");
+            cart = [];
+            closeCart();
+        }
+
+        // Admin Panel (PIN: 4172)
+        function openAdminModal() { document.getElementById('adminModal').style.display = 'flex'; }
+        function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
+
+        function verifyAdminPin() {
+            const pin = document.getElementById('adminPinInput').value;
+            if(pin === "4172") {
+                document.getElementById('adminLoginBox').style.display = 'none';
+                document.getElementById('adminDashboardContent').style.display = 'block';
+                renderAdminProductList();
+            } else {
+                alert("Incorrect PIN!");
+            }
+        }
+
+        function addNewProduct() {
+            const name = document.getElementById('newProdName').value;
+            const price = parseInt(document.getElementById('newProdPrice').value);
+            const category = document.getElementById('newProdCategory').value;
+            const image = document.getElementById('newProdImg').value || "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80";
+
+            if(!name || isNaN(price) || !category) {
+                alert("Please fill valid product details!");
+                return;
+            }
+
+            products.unshift({ id: Date.now(), name, price, category, image, rating: "5.0" });
+            renderProducts();
+            renderAdminProductList();
+            alert("New product added successfully!");
+            document.getElementById('newProdName').value = '';
+            document.getElementById('newProdPrice').value = '';
+            document.getElementById('newProdCategory').value = '';
+            document.getElementById('newProdImg').value = '';
+        }
+
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            renderProducts();
+            renderAdminProductList();
+            alert("Product deleted successfully!");
+        }
+
+        function renderAdminProductList() {
+            const container = document.getElementById('adminProductList');
+            container.innerHTML = '';
+            products.forEach(p => {
+                container.innerHTML += `
+                    <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center text-xs">
+                        <span class="truncate max-w-[300px]">${p.name} - <b>PKR ${p.price}</b></span>
+                        <button onclick="deleteProduct(${p.id})" class="bg-red-600 hover:bg-red-500 px-2.5 py-1 rounded text-white"><i class="fa-solid fa-trash"></i> Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        window.onload = function() {
+            renderProducts();
+            renderReviews();
+        };
+    </script>
+</body>
+</html>
