@@ -140,7 +140,7 @@
         </div>
     </div>
 
-    <!-- Hidden Admin Panel Modal (PIN: 4172) -->
+    <!-- Hidden Admin Panel Modal (PIN: 4172 with Deals & Choose Image Option) -->
     <div id="adminModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/95 backdrop-blur-md px-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
@@ -160,12 +160,16 @@
             <!-- Admin Dashboard Content -->
             <div id="adminDashboardContent" class="hidden space-y-6">
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
-                    <h3 class="text-sm font-bold text-orange-400"><i class="fa-solid fa-plus mr-1"></i> Add New Product (Syncs Globally)</h3>
+                    <h3 class="text-sm font-bold text-orange-400"><i class="fa-solid fa-plus mr-1"></i> Add New Product & Deal (Global Sync)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <input type="text" id="newProdName" placeholder="Product Name" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
                         <input type="number" id="newProdPrice" placeholder="Price (50, 100, or 200 PKR)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
                         <input type="text" id="newProdCategory" placeholder="Category (e.g. Mystery Box)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
-                        <input type="text" id="newProdImg" placeholder="Image URL (Unsplash or direct link)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
+                        <input type="text" id="newProdDeal" placeholder="Deal Tag (e.g. 11.11 Flash Deal / Hot Bonus)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Choose Product Image File</label>
+                        <input type="file" id="newProdImageFile" accept="image/*" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-orange-600 file:text-white">
                     </div>
                     <button onclick="addNewProduct()" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-xl text-xs font-semibold text-white">Publish Globally</button>
                 </div>
@@ -179,7 +183,6 @@
     </div>
 
     <script>
-        // Pre-configured shared cloud connection for Jannat Store
         const firebaseConfig = {
             apiKey: "AIzaSyD-JannatStoreCloudSync-TestKey99",
             authDomain: "jannat-store-global.firebaseapp.com",
@@ -189,7 +192,6 @@
             appId: "1:1234567890:web:abcdef"
         };
 
-        // Initialize Firebase safely
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
@@ -198,14 +200,12 @@
         let products = [];
         let cart = [];
 
-        // Real-time listener for global instant updates
         db.collection("jannat_products").onSnapshot((snapshot) => {
             products = [];
             snapshot.forEach((doc) => {
                 products.push({ id: doc.id, ...doc.data() });
             });
             
-            // If empty, insert default 100 products initially
             if(products.length === 0) {
                 initializeDefaultProducts();
             } else {
@@ -219,17 +219,17 @@
             const sampleImages = [
                 "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=300&q=80",
                 "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80",
-                "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80",
-                "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=300&q=80",
-                "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300&q=80"
+                "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80"
             ];
             const priceOptions = [50, 100, 200];
+            const deals = ["11.11 Flash Deal", "Super Savings Deal", "Hot Mystery Deal"];
             
-            for (let i = 1; i <= 20; i++) {
+            for (let i = 1; i <= 6; i++) {
                 db.collection("jannat_products").add({
-                    name: `Jannat Store 11.11 Deal #${i} - ${categories[i % categories.length]}`,
+                    name: `Jannat Store Deal #${i} - ${categories[i % categories.length]}`,
                     price: priceOptions[i % priceOptions.length],
                     category: categories[i % categories.length],
+                    dealTag: deals[i % deals.length],
                     image: sampleImages[i % sampleImages.length],
                     rating: "5.0"
                 });
@@ -249,10 +249,12 @@
             const grid = document.getElementById('productGrid');
             grid.innerHTML = '';
             products.forEach(p => {
+                const dealBadge = p.dealTag ? `<span class="absolute top-2 left-2 bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-md uppercase tracking-wider"><i class="fa-solid fa-tag mr-1"></i>${p.dealTag}</span>` : '';
                 grid.innerHTML += `
-                    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-lg hover-scale overflow-hidden">
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-lg hover-scale overflow-hidden relative">
                         <div>
-                            <div class="h-40 w-full bg-slate-950 rounded-xl mb-4 overflow-hidden border border-slate-800/80">
+                            <div class="h-40 w-full bg-slate-950 rounded-xl mb-4 overflow-hidden border border-slate-800/80 relative">
+                                ${dealBadge}
                                 <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover hover:scale-110 transition duration-500">
                             </div>
                             <span class="text-[10px] bg-orange-600/20 text-orange-400 px-2 py-0.5 rounded font-bold uppercase">${p.category}</span>
@@ -361,25 +363,41 @@
             const name = document.getElementById('newProdName').value;
             const price = parseInt(document.getElementById('newProdPrice').value);
             const category = document.getElementById('newProdCategory').value;
-            const image = document.getElementById('newProdImg').value || "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80";
+            const dealTag = document.getElementById('newProdDeal').value;
+            const imageFile = document.getElementById('newProdImageFile').files[0];
 
             if(!name || isNaN(price) || !category) {
-                alert("Please fill valid product details!");
+                alert("Please fill name, price and category!");
                 return;
             }
 
+            if(imageFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    saveProductToCloud(name, price, category, dealTag, e.target.result);
+                };
+                reader.readAsDataURL(imageFile);
+            } else {
+                // Default fallback image if no file chosen
+                saveProductToCloud(name, price, category, dealTag, "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80");
+            }
+        }
+
+        function saveProductToCloud(name, price, category, dealTag, imageUrl) {
             db.collection("jannat_products").add({
                 name: name,
                 price: price,
                 category: category,
-                image: image,
+                dealTag: dealTag || "",
+                image: imageUrl,
                 rating: "5.0"
             }).then(() => {
-                alert("Product published globally across the world!");
+                alert("Product & Deal published globally!");
                 document.getElementById('newProdName').value = '';
                 document.getElementById('newProdPrice').value = '';
                 document.getElementById('newProdCategory').value = '';
-                document.getElementById('newProdImg').value = '';
+                document.getElementById('newProdDeal').value = '';
+                document.getElementById('newProdImageFile').value = '';
             });
         }
 
@@ -397,7 +415,7 @@
             products.forEach(p => {
                 container.innerHTML += `
                     <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center text-xs">
-                        <span class="truncate max-w-[300px]">${p.name} - <b>PKR ${p.price}</b></span>
+                        <span class="truncate max-w-[300px]">${p.name} - <b>PKR ${p.price}</b> ${p.dealTag ? '('+p.dealTag+')' : ''}</span>
                         <button onclick="deleteProduct('${p.id}')" class="bg-red-600 hover:bg-red-500 px-2.5 py-1 rounded text-white"><i class="fa-solid fa-trash"></i> Delete</button>
                     </div>
                 `;
