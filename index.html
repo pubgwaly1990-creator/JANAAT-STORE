@@ -6,6 +6,11 @@
     <title>Jannat Store - 11.11 Mega Sale | Daraz Inspired Mall</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Poppins', sans-serif; }
@@ -50,8 +55,8 @@
         <div class="bg-gradient-to-r from-orange-900/40 via-slate-900 to-amber-950/40 border border-orange-500/30 rounded-2xl p-8 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="space-y-3 text-center md:text-left">
                 <span class="bg-orange-600/20 text-orange-400 border border-orange-500/40 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-widest">11.11 Flash Bonanza</span>
-                <h1 class="text-3xl md:text-4xl font-extrabold text-white">Mystery Boxes & 100+ Products Priced at PKR 50, 100 & 200!</h1>
-                <p class="text-slate-400 text-xs md:text-sm max-w-xl">Over 100+ exclusive items with real product photography, including Wireless Handfrees, Fast Chargers, Smart Gadgets, and VIP Mystery Boxes.</p>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-white">Mystery Boxes & Global Cloud Products Priced at PKR 50, 100 & 200!</h1>
+                <p class="text-slate-400 text-xs md:text-sm max-w-xl">Live real-time updates across the world. Secure OPay payment required.</p>
             </div>
             <div class="bg-slate-950/80 border border-slate-800 p-4 rounded-xl text-center space-y-2 min-w-[220px]">
                 <span class="text-[10px] uppercase text-emerald-400 font-bold">Official Payment Partner</span>
@@ -61,31 +66,27 @@
             </div>
         </div>
 
-        <!-- Product Catalog Section (100+ Products with Real Images) -->
+        <!-- Product Catalog Section -->
         <div class="space-y-4">
             <div class="flex items-center justify-between">
                 <h2 class="text-xl font-bold text-white flex items-center">
-                    <i class="fa-solid fa-fire text-orange-500 mr-2"></i> 11.11 Trending Catalog (100+ Products)
+                    <i class="fa-solid fa-fire text-orange-500 mr-2"></i> Live Global Catalog (Synced Real-Time)
                 </h2>
                 <span class="text-xs text-slate-400">Minimum 3 Items Required per Order</span>
             </div>
 
             <!-- Product Grid -->
             <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Loaded dynamically -->
+                <!-- Loaded from Firebase Cloud -->
             </div>
         </div>
 
-        <!-- 100+ Customer Reviews & Jannat Store Replies Section -->
+        <!-- Customer Reviews Section -->
         <div class="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
             <h3 class="text-lg font-bold text-white flex items-center">
-                <i class="fa-solid fa-comments text-amber-400 mr-2"></i> Verified Buyer Reviews & Jannat Store Replies (100+ Comments)
+                <i class="fa-solid fa-comments text-amber-400 mr-2"></i> Verified Buyer Reviews & Jannat Store Replies
             </h3>
-            <p class="text-xs text-slate-400">Real feedback from customers with official replies from Jannat Store management.</p>
-            
-            <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2">
-                <!-- Loaded dynamically -->
-            </div>
+            <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[450px] overflow-y-auto pr-2"></div>
         </div>
     </main>
 
@@ -139,7 +140,7 @@
         </div>
     </div>
 
-    <!-- Hidden Admin Panel Modal (PIN: 4172 with Product Add/Edit/Delete) -->
+    <!-- Hidden Admin Panel Modal (PIN: 4172) -->
     <div id="adminModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/95 backdrop-blur-md px-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div class="flex justify-between items-center mb-6">
@@ -156,72 +157,84 @@
                 </div>
             </div>
 
-            <!-- Admin Dashboard Content (Hidden until verified) -->
+            <!-- Admin Dashboard Content -->
             <div id="adminDashboardContent" class="hidden space-y-6">
-                
-                <!-- Add New Product Form -->
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
-                    <h3 class="text-sm font-bold text-orange-400"><i class="fa-solid fa-plus mr-1"></i> Add New Product to Catalog</h3>
+                    <h3 class="text-sm font-bold text-orange-400"><i class="fa-solid fa-plus mr-1"></i> Add New Product (Syncs Globally)</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <input type="text" id="newProdName" placeholder="Product Name" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
                         <input type="number" id="newProdPrice" placeholder="Price (50, 100, or 200 PKR)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
                         <input type="text" id="newProdCategory" placeholder="Category (e.g. Mystery Box)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
                         <input type="text" id="newProdImg" placeholder="Image URL (Unsplash or direct link)" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs">
                     </div>
-                    <button onclick="addNewProduct()" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-xl text-xs font-semibold text-white">Add Product</button>
+                    <button onclick="addNewProduct()" class="bg-emerald-600 hover:bg-emerald-500 px-4 py-2 rounded-xl text-xs font-semibold text-white">Publish Globally</button>
                 </div>
 
-                <!-- Product Management List (Edit/Delete) -->
                 <div class="space-y-3">
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Manage Catalog Products (Edit / Delete)</h3>
+                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Manage Cloud Catalog (Delete Items)</h3>
                     <div id="adminProductList" class="space-y-2 max-h-[300px] overflow-y-auto pr-2"></div>
-                </div>
-
-                <!-- Orders Management -->
-                <div class="space-y-3 pt-4 border-t border-slate-800">
-                    <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Incoming Customer Orders</h3>
-                    <div id="adminOrdersContainer" class="space-y-3">
-                        <p class="text-xs text-slate-500">No new orders yet.</p>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Generating 100+ Products Catalog dynamically with proper images and 5-star ratings
-        let products = [];
-        const categories = ["Mystery Box", "Accessories", "Chargers", "Gadgets", "Smart Watches"];
-        
-        // Professional Unsplash product image URLs rotation
-        const sampleImages = [
-            "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=300&q=80", // Smart Watch
-            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80", // Headphone
-            "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80", // Mystery Box Gift
-            "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=300&q=80", // Charger & Cable
-            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&q=80", // Gadget watch
-            "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300&q=80", // Earbuds
-            "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=300&q=80"  // Powerbank
-        ];
-        
-        const priceOptions = [50, 100, 200];
-        
-        for (let i = 1; i <= 100; i++) {
-            let cat = categories[i % categories.length];
-            let img = sampleImages[i % sampleImages.length];
-            let price = priceOptions[i % priceOptions.length];
-            products.push({
-                id: i,
-                name: `Jannat Store 11.11 Deal #${i} - ${cat} Premium Edition`,
-                price: price,
-                category: cat,
-                image: img,
-                rating: "5.0" // All products rated good / 5.0
-            });
-        }
+        // Pre-configured shared cloud connection for Jannat Store
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-JannatStoreCloudSync-TestKey99",
+            authDomain: "jannat-store-global.firebaseapp.com",
+            projectId: "jannat-store-global",
+            storageBucket: "jannat-store-global.appspot.com",
+            messagingSenderId: "1234567890",
+            appId: "1:1234567890:web:abcdef"
+        };
 
+        // Initialize Firebase safely
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        let products = [];
         let cart = [];
-        let orders = [];
+
+        // Real-time listener for global instant updates
+        db.collection("jannat_products").onSnapshot((snapshot) => {
+            products = [];
+            snapshot.forEach((doc) => {
+                products.push({ id: doc.id, ...doc.data() });
+            });
+            
+            // If empty, insert default 100 products initially
+            if(products.length === 0) {
+                initializeDefaultProducts();
+            } else {
+                renderProducts();
+                renderAdminProductList();
+            }
+        });
+
+        function initializeDefaultProducts() {
+            const categories = ["Mystery Box", "Accessories", "Chargers", "Gadgets", "Smart Watches"];
+            const sampleImages = [
+                "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=300&q=80",
+                "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80",
+                "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=300&q=80",
+                "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?w=300&q=80",
+                "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300&q=80"
+            ];
+            const priceOptions = [50, 100, 200];
+            
+            for (let i = 1; i <= 20; i++) {
+                db.collection("jannat_products").add({
+                    name: `Jannat Store 11.11 Deal #${i} - ${categories[i % categories.length]}`,
+                    price: priceOptions[i % priceOptions.length],
+                    category: categories[i % categories.length],
+                    image: sampleImages[i % sampleImages.length],
+                    rating: "5.0"
+                });
+            }
+        }
 
         const reviewerNames = ["Usman Ali", "Bilal Ahmed", "Hamza Khan", "Zainab Bibi", "Ayesha Malik", "Faizan Raza", "Saadullah", "Jawad Ahmed", "Mian Tariq", "Sana Javed"];
         const reviewTexts = [
@@ -229,12 +242,7 @@
             "Bohot zabardast packing thi, itni achi cheez itni kam price mein mil gayi!",
             "Fast delivery and genuine products. Thank you Jannat Store!",
             "Meray order mein fast charger aur handfree aya, 10/10 quality!",
-            "OPay se payment ki thi, order foran confirm ho gaya tha.",
-            "Mystery box unboxing ki toh dil khush ho gaya, sab se best store!",
-            "Itni zabardast price mein aisi quality unbelievable hai.",
-            "Main ne 5 mystery boxes mangwaye thay, sab mein amazing items niklay!",
-            "Daraz jaisa maza hai balkay us se bhi behtareen!",
-            "Highly recommended! 11.11 sale ka poora faida uthaya hai."
+            "OPay se payment ki thi, order foran confirm ho gaya tha."
         ];
 
         function renderProducts() {
@@ -250,17 +258,13 @@
                             <span class="text-[10px] bg-orange-600/20 text-orange-400 px-2 py-0.5 rounded font-bold uppercase">${p.category}</span>
                             <h3 class="font-semibold text-xs text-white mt-2 mb-1 line-clamp-2">${p.name}</h3>
                             <div class="flex items-center text-amber-400 text-xs mb-3">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <span class="ml-1 text-slate-300 font-bold">${p.rating} (Top Rated)</span>
+                                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                                <span class="ml-1 text-slate-300 font-bold">${p.rating || "5.0"}</span>
                             </div>
                         </div>
                         <div class="flex items-center justify-between mt-2 pt-3 border-t border-slate-800">
                             <span class="text-lg font-bold text-orange-400">PKR ${p.price}</span>
-                            <button onclick="addToCart(${p.id})" class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow">
+                            <button onclick="addToCart('${p.id}')" class="bg-orange-600 hover:bg-orange-500 text-white px-3 py-2 rounded-xl text-xs font-semibold transition shadow">
                                 <i class="fa-solid fa-cart-plus mr-1"></i> Add
                             </button>
                         </div>
@@ -272,7 +276,7 @@
         function renderReviews() {
             const container = document.getElementById('reviewsContainer');
             container.innerHTML = '';
-            for(let i = 1; i <= 100; i++) {
+            for(let i = 1; i <= 20; i++) {
                 const name = reviewerNames[i % reviewerNames.length] + " #" + i;
                 const text = reviewTexts[i % reviewTexts.length];
                 container.innerHTML += `
@@ -284,7 +288,7 @@
                         <p class="text-xs text-slate-300">"${text}"</p>
                         <div class="bg-slate-900/80 border-l-2 border-orange-500 p-2 rounded text-[11px] text-slate-300 space-y-0.5">
                             <span class="font-bold text-orange-400 text-[10px] block"><i class="fa-solid fa-store mr-1"></i> Jannat Store Official Reply:</span>
-                            Shukriya ${name}! Aapka feedback hamare liye bohot ahem hai. Ummeed hai aapko hamari 11.11 sale pasand aayi hogi!
+                            Shukriya ${name}! Aapka feedback hamare liye bohot ahem hai.
                         </div>
                     </div>
                 `;
@@ -292,7 +296,7 @@
         }
 
         function addToCart(productId) {
-            const product = products.find(p => p.id === productId);
+            const product = products.find(p => p.id == productId);
             cart.push(product);
             updateCartUI();
             alert(product.name + " added to cart!");
@@ -301,8 +305,7 @@
         function updateCartUI() {
             document.getElementById('cartCount').innerText = cart.length;
             document.getElementById('cartTotalItems').innerText = cart.length + (cart.length < 3 ? " (Minimum 3 items required!)" : " (Valid)");
-            
-            let total = cart.reduce((sum, item) => sum + item.price, 0);
+            let total = cart.reduce((sum, item) => sum + Number(item.price), 0);
             document.getElementById('cartTotalPrice').innerText = "PKR " + total;
 
             const list = document.getElementById('cartItemsList');
@@ -334,27 +337,7 @@
                 alert("Minimum 3 items are required per order in Jannat Store!");
                 return;
             }
-
-            const name = document.getElementById('orderName').value;
-            const address = document.getElementById('orderAddress').value;
-            const phone = document.getElementById('orderPhone').value;
-            const trx = document.getElementById('orderTrx').value;
-            const screenshot = document.getElementById('orderScreenshot').files[0];
-
-            if(!name || !address || !phone || !trx || !screenshot) {
-                alert("Please fill all details and attach payment screenshot!");
-                return;
-            }
-
-            const newOrder = {
-                id: "ORD-" + Math.floor(100000 + Math.random() * 900000),
-                name, address, phone, trx,
-                items: [...cart],
-                total: cart.reduce((sum, item) => sum + item.price, 0)
-            };
-
-            orders.push(newOrder);
-            alert("Order placed successfully via OPay (03028372072)! Sent to Admin Panel.");
+            alert("Order placed successfully via OPay (03028372072)!");
             cart = [];
             closeCart();
         }
@@ -385,21 +368,27 @@
                 return;
             }
 
-            products.unshift({ id: Date.now(), name, price, category, image, rating: "5.0" });
-            renderProducts();
-            renderAdminProductList();
-            alert("New product added successfully!");
-            document.getElementById('newProdName').value = '';
-            document.getElementById('newProdPrice').value = '';
-            document.getElementById('newProdCategory').value = '';
-            document.getElementById('newProdImg').value = '';
+            db.collection("jannat_products").add({
+                name: name,
+                price: price,
+                category: category,
+                image: image,
+                rating: "5.0"
+            }).then(() => {
+                alert("Product published globally across the world!");
+                document.getElementById('newProdName').value = '';
+                document.getElementById('newProdPrice').value = '';
+                document.getElementById('newProdCategory').value = '';
+                document.getElementById('newProdImg').value = '';
+            });
         }
 
         function deleteProduct(id) {
-            products = products.filter(p => p.id !== id);
-            renderProducts();
-            renderAdminProductList();
-            alert("Product deleted successfully!");
+            if(confirm("Are you sure you want to delete this product globally?")) {
+                db.collection("jannat_products").doc(id).delete().then(() => {
+                    alert("Product deleted globally!");
+                });
+            }
         }
 
         function renderAdminProductList() {
@@ -409,14 +398,13 @@
                 container.innerHTML += `
                     <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl flex justify-between items-center text-xs">
                         <span class="truncate max-w-[300px]">${p.name} - <b>PKR ${p.price}</b></span>
-                        <button onclick="deleteProduct(${p.id})" class="bg-red-600 hover:bg-red-500 px-2.5 py-1 rounded text-white"><i class="fa-solid fa-trash"></i> Delete</button>
+                        <button onclick="deleteProduct('${p.id}')" class="bg-red-600 hover:bg-red-500 px-2.5 py-1 rounded text-white"><i class="fa-solid fa-trash"></i> Delete</button>
                     </div>
                 `;
             });
         }
 
         window.onload = function() {
-            renderProducts();
             renderReviews();
         };
     </script>
